@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DriverManager.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">TelerikTestingFramework</a> &gt; <a href="index.source.html" class="el_package">testframework</a> &gt; <span class="el_source">DriverManager.java</span></div><h1>DriverManager.java</h1><pre class="source lang-java linenums">package testframework;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.edge.EdgeOptions;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
+import testframework.enums.BrowserMode;
+import testframework.enums.BrowserType;
+import testframework.enums.FrameworkSettings;
+
+<span class="nc" id="L15">public class DriverManager {</span>
+<span class="fc" id="L16">    private static final Logger LOGGER = LogManager.getRootLogger();</span>
+    private static Driver driver;
+
+    public static void quitDriver() {
+<span class="pc bpc" id="L20" title="1 of 2 branches missed.">        if (driver != null) {</span>
+<span class="fc" id="L21">            driver.quit();</span>
+<span class="fc" id="L22">            driver = null;</span>
+        }
+<span class="fc" id="L24">    }</span>
+
+    public static Driver getDriver() {
+<span class="fc bfc" id="L27" title="All 4 branches covered.">        if (driver == null || driver.isDisposed()) {</span>
+<span class="fc" id="L28">            driver = setupBrowserFromConfig();</span>
+        }
+<span class="fc" id="L30">        return driver;</span>
+    }
+
+    private static Driver setupBrowser(BrowserType browserType, BrowserMode browserMode, Integer defaultTimeoutSeconds) {
+        Driver startedDriver;
+<span class="pc bpc" id="L35" title="3 of 4 branches missed.">        switch (browserType) {</span>
+            case CHROME: {
+<span class="fc" id="L37">                ChromeOptions chromeOptions = new ChromeOptions();</span>
+<span class="pc bpc" id="L38" title="1 of 2 branches missed.">                if (browserMode == BrowserMode.HEADLESS) {</span>
+<span class="nc" id="L39">                    LOGGER.info(&quot;Starting Chrome browser in headless mode...&quot;);</span>
+<span class="nc" id="L40">                    chromeOptions.addArguments(&quot;--headless&quot;);</span>
+                } else {
+<span class="fc" id="L42">                    LOGGER.info(&quot;Starting Chrome browser in normal mode...&quot;);</span>
+                }
+<span class="fc" id="L44">                startedDriver = new Driver(new ChromeDriver(chromeOptions), defaultTimeoutSeconds);</span>
+<span class="fc" id="L45">                break;</span>
+            }
+            case FIREFOX: {
+<span class="nc" id="L48">                FirefoxOptions firefoxOptions = new FirefoxOptions();</span>
+<span class="nc bnc" id="L49" title="All 2 branches missed.">                if (browserMode == BrowserMode.HEADLESS) {</span>
+<span class="nc" id="L50">                    firefoxOptions.addArguments(&quot;--headless&quot;);</span>
+<span class="nc" id="L51">                    LOGGER.info(&quot;Starting Firefox browser in headless mode...&quot;);</span>
+                } else {
+<span class="nc" id="L53">                    LOGGER.info(&quot;Starting Firefox browser in normal mode...&quot;);</span>
+                }
+
+<span class="nc" id="L56">                startedDriver = new Driver(new FirefoxDriver(firefoxOptions), defaultTimeoutSeconds);</span>
+<span class="nc" id="L57">                break;</span>
+            }
+            case EDGE: {
+<span class="nc" id="L60">                EdgeOptions edgeOptions = new EdgeOptions();</span>
+<span class="nc bnc" id="L61" title="All 2 branches missed.">                if (browserMode == BrowserMode.HEADLESS) {</span>
+<span class="nc" id="L62">                    edgeOptions.addArguments(&quot;--headless&quot;);</span>
+<span class="nc" id="L63">                    LOGGER.info(&quot;Starting Edge browser in headless mode...&quot;);</span>
+                } else {
+<span class="nc" id="L65">                    LOGGER.info(&quot;Starting Edge browser in normal mode...&quot;);</span>
+                }
+
+<span class="nc" id="L68">                startedDriver = new Driver(new EdgeDriver(edgeOptions), defaultTimeoutSeconds);</span>
+<span class="nc" id="L69">                break;</span>
+            }
+            default:
+<span class="nc" id="L72">                throw new IllegalStateException(&quot;Unexpected value: &quot; + browserType);</span>
+        }
+
+<span class="pc bpc" id="L75" title="1 of 2 branches missed.">        if (browserMode == BrowserMode.NORMAL) {</span>
+<span class="fc" id="L76">            startedDriver.manage().window().maximize();</span>
+        }
+<span class="fc" id="L78">        return startedDriver;</span>
+    }
+
+    private static Driver setupBrowserFromConfig() {
+        try {
+<span class="fc" id="L83">            BrowserType browserTypeFromConfig =</span>
+<span class="fc" id="L84">                    Enum.valueOf(</span>
+                            BrowserType.class,
+<span class="fc" id="L86">                            (String) PropertiesManager.getConfigProperties().get(</span>
+<span class="fc" id="L87">                                    FrameworkSettings.BROWSER_TYPE.getValue()));</span>
+
+<span class="fc" id="L89">            BrowserMode browserModeFromConfig =</span>
+<span class="fc" id="L90">                    Enum.valueOf(</span>
+                            BrowserMode.class,
+<span class="fc" id="L92">                            (String) PropertiesManager.getConfigProperties().get(</span>
+<span class="fc" id="L93">                                    FrameworkSettings.BROWSER_MODE.getValue()));</span>
+
+            Integer timeoutFromConfig =
+<span class="fc" id="L96">                    Integer.parseInt(PropertiesManager.getConfigProperties().get(</span>
+<span class="fc" id="L97">                            FrameworkSettings.DEFAULT_TIMEOUT_SECONDS.getValue()).toString());</span>
+
+<span class="fc" id="L99">            return setupBrowser(browserTypeFromConfig, browserModeFromConfig, timeoutFromConfig);</span>
+<span class="nc" id="L100">        } catch (Exception ex) {</span>
+<span class="nc" id="L101">            throw new RuntimeException(&quot;Failed to start Driver from config options.&quot;, ex);</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

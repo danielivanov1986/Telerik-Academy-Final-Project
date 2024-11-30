@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JSONRequests.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">RESTAssured-EXAM-Solution</a> &gt; <a href="index.source.html" class="el_package">com.weare</a> &gt; <span class="el_source">JSONRequests.java</span></div><h1>JSONRequests.java</h1><pre class="source lang-java linenums">package com.weare;
+
+import static com.weare.Constants.*;
+
+<span class="nc" id="L5">public class JSONRequests {</span>
+    public static final String REGISTRATION_BODY = &quot;{\n&quot; +
+            &quot;    \&quot;category\&quot;: {\n&quot; +
+            &quot;        \&quot;id\&quot;: 100,\n&quot; +
+            &quot;        \&quot;name\&quot;: \&quot;All\&quot;\n&quot; +
+            &quot;    },\n&quot; +
+            &quot;    \&quot;confirmPassword\&quot;: \&quot;%s\&quot;,\n&quot; +
+            &quot;    \&quot;email\&quot;: \&quot;%s\&quot;,\n&quot; +
+            &quot;    \&quot;password\&quot;: \&quot;%s\&quot;,\n&quot; +
+            &quot;    \&quot;username\&quot;: \&quot;%s\&quot;\n&quot; +
+            &quot;}&quot;;
+
+<span class="fc" id="L17">    public static final String POST_BODY = String.format(&quot;{\n&quot; +</span>
+            &quot; \&quot;content\&quot;: \&quot;%s\&quot;,\n&quot; +
+            &quot; \&quot;picture\&quot;: \&quot;No picture\&quot;,\n&quot; +
+            &quot; \&quot;public\&quot;: true\n&quot; +
+            &quot;}&quot;, POST_DESCRIPTION);
+
+    public static final String COMMENT_BODY = &quot;{\n&quot; +
+            &quot;  \&quot;content\&quot;: \&quot;%s\&quot;,\n&quot; +
+            &quot;  \&quot;postId\&quot;: %s,\n&quot; +
+            &quot;  \&quot;userId\&quot;: %s\n&quot; +
+            &quot;}&quot;;
+
+
+    public static final String PROFILE_POST = &quot;{\n&quot; +
+            &quot;  \&quot;index\&quot;: 0,\n&quot; +
+            &quot;  \&quot;next\&quot;: true,\n&quot; +
+            &quot;  \&quot;searchParam1\&quot;: \&quot;\&quot;,\n&quot; +
+            &quot;  \&quot;searchParam2\&quot;: \&quot;\&quot;,\n&quot; +
+            &quot;  \&quot;size\&quot;: 10\n&quot; +
+            &quot;}&quot;;
+
+    public static final String PROFILE_BODY = &quot;{\n&quot; +
+            &quot;    \&quot;id\&quot;: %s,\n&quot; +
+            &quot;    \&quot;username\&quot;: \&quot;%s\&quot;,\n&quot; +
+            &quot;    \&quot;email\&quot;: \&quot;%s\&quot;,\n&quot; +
+            &quot;    \&quot;firstName\&quot;: \&quot;%s\&quot;,\n&quot; +
+            &quot;    \&quot;lastName\&quot;: \&quot;randomLastName\&quot;,\n&quot; +
+            &quot;    \&quot;sex\&quot;: \&quot;MALE\&quot;,\n&quot; +
+            &quot;    \&quot;birthYear\&quot;: \&quot;2024-11-11\&quot;,\n&quot; +
+            &quot;    \&quot;personalReview\&quot;: \&quot;randomPhrase\&quot;,\n&quot; +
+            &quot;    \&quot;location\&quot;: {\n&quot; +
+            &quot;        \&quot;city\&quot;: {\n&quot; +
+            &quot;            \&quot;id\&quot;: 1,\n&quot; +
+            &quot;            \&quot;city\&quot;: \&quot;Sofia\&quot;,\n&quot; +
+            &quot;            \&quot;country\&quot;: {}\n&quot; +
+            &quot;            \n&quot; +
+            &quot;        }\n&quot; +
+            &quot;    }\n&quot; +
+            &quot;}&quot;;
+
+    public static final String SEND_CONNECTION_REQ_BODY = &quot;{\&quot;id\&quot;: %s, \&quot;username\&quot;: \&quot;%s\&quot;}&quot;;
+
+<span class="fc" id="L59">    public static final String POST_EDIT = String.format(</span>
+            &quot;{\n&quot;
+                    + &quot;\&quot;content\&quot;: \&quot;%s\&quot;,\n&quot;
+                    + &quot;\&quot;picture\&quot;: \&quot;No picture\&quot;,\n&quot;
+                    + &quot;\&quot;public\&quot;: true\n&quot;
+                    + &quot;}&quot;, EDIT_COMMENT);
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -1,0 +1,2491 @@
+{
+	"info": {
+		"_postman_id": "395e971e-c4cc-4213-872d-908b4e29ac95",
+		"name": "WEare Project",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "37888416",
+		"_collection_link": "https://team-3-weareproject.postman.co/workspace/Team-3-WEare_Project-Workspace~f437431d-0fc4-42d4-8a93-309bac56843b/collection/23754858-395e971e-c4cc-4213-872d-908b4e29ac95?action=share&source=collection_link&creator=37888416"
+	},
+	"item": [
+		{
+			"name": "Happy Paths",
+			"item": [
+				{
+					"name": "User registration",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var resp = pm.response.text()\r",
+									"\r",
+									" pm.test(\"Response body contains id\", ()=>{\r",
+									"     pm.expect(resp).to.include(\"id\");\r",
+									" })\r",
+									"\r",
+									"pm.collectionVariables.set(\"username\", resp.split(\" \")[3]);\r",
+									"pm.collectionVariables.set(\"user_id\", resp.split(\" \")[6]);\r",
+									"\r",
+									"console.log(resp.split(\" \")[3]);\r",
+									"console.log(resp.split(\" \")[6]); \r",
+									"\r",
+									"pm.test(\"Response time is less than 500ms\", function () {\r",
+									"  pm.expect(pm.response.responseTime).to.be.below(500);\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"authorities\": [\r\n        \"ROLE_USER\"\r\n    ],\r\n    \"category\": {\r\n        \"id\": {{category_id}},\r\n        \"name\": \"{{category_name}}\"\r\n    },\r\n    \"confirmPassword\": \"{{password}}\",\r\n    \"email\": \"{{$randomEmail}}\",\r\n    \"password\": \"{{password}}\",\r\n    \"username\": \"{{$randomFirstName}}{{randomString}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_URL}}{{api}}/users/",
+							"host": [
+								"{{base_URL}}{{api}}"
+							],
+							"path": [
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Authentication",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response body contains text - logout button\", ()=>{\r",
+									"     pm.expect(pm.response.text()).to.include(\"LOGOUT\");\r",
+									" })\r",
+									"\r",
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"  pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "username",
+									"value": "{{username}}",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "{{password}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_URL}}/authenticate",
+							"host": [
+								"{{base_URL}}"
+							],
+							"path": [
+								"authenticate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create a public post",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Post content to contains message.\", () => {\r",
+									"    _.each(jsonData.Responses, (item) => {\r",
+									"\r",
+									"        pm.expect(item.content.startsWith(pm.collectionVariables.get(\"post_content\"))).to.be.true;\r",
+									"        })\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response to have post_id section or error message\", function () {\r",
+									"    var hasItems = pm.response.text().includes(\"postId\");\r",
+									"    var errorMsg = \"Content size must be up to 1000 symbols\"\r",
+									"    pm.expect(hasItems, errorMsg );\r",
+									"});\r",
+									"\r",
+									"pm.collectionVariables.set(\"postId\", jsonData.postId);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"content\": {{post_content}},\r\n  \"picture\": {{picture_content}},\r\n  \"public\": true\r\n}"
+						},
+						"url": {
+							"raw": "{{base_URL}}{{api}}{{post}}/auth/creator",
+							"host": [
+								"{{base_URL}}{{api}}{{post}}"
+							],
+							"path": [
+								"auth",
+								"creator"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all posts",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"var resp = pm.response.text();\r",
+									"var maxPostId = Math.max(...jsonData.map(item => item.postId));\r",
+									"\r",
+									"pm.environment.set(\"postId\", maxPostId);\r",
+									"\r",
+									"console.log(jsonData);\r",
+									"\r",
+									"pm.test(\"Response to have necessary sections\", function () {\r",
+									"    pm.expect(resp).to.include(\"postId\");\r",
+									"    pm.expect(resp).to.include(\"content\");\r",
+									"    pm.expect(resp).to.include(\"date\");\r",
+									"    \r",
+									"    pm.expect(jsonData[0].category.id).eql(parseInt(pm.collectionVariables.get(\"category_id\")));\r",
+									"    pm.expect(jsonData[0].category.name).eql(pm.collectionVariables.get(\"category_name\"));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response has post ID\", function () {\r",
+									"    pm.expect(jsonData[0]).to.have.property(\"postId\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_URL}}{{api}}{{post}}/",
+							"host": [
+								"{{base_URL}}{{api}}{{post}}"
+							],
+							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit a post",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response body is empty\", function () {\r",
+									"    pm.expect(pm.response.text()).to.eql(\"\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true,
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"content\": {{edit_post_content}},\r\n  \"picture\":{{picture_content}},\r\n  \"public\": true\r\n}"
+						},
+						"url": {
+							"raw": "{{base_URL}}{{api}}{{post}}/auth/editor?postId={{postId}}",
+							"host": [
+								"{{base_URL}}{{api}}{{post}}"
+							],
+							"path": [
+								"auth",
+								"editor"
+							],
+							"query": [
+								{
+									"key": "postId",
+									"value": "{{postId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Like a post",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Validate post is liked.\", function () {\r",
+									"    pm.expect(JSON.stringify(jsonData.liked)).to.eql(\"true\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate user liked the post.\", function () {\r",
+									"    pm.expect(jsonData.likes[0].username).eqls(pm.collectionVariables.get(\"username\"));\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_URL}}{{api}}{{post}}/auth/likesUp?postId={{postId}}",
+							"host": [
+								"{{base_URL}}{{api}}{{post}}"
+							],
+							"path": [
+								"auth",
+								"likesUp"
+							],
+							"query": [
+								{
+									"key": "postId",
+									"value": "{{postId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Dislike a post",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Validate comment is disliked.\", function () {\r",
+									"    pm.expect(JSON.stringify(jsonData.liked)).to.eql(\"false\");\r",
+									"\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_URL}}{{api}}{{post}}/auth/likesUp?postId={{postId}}",
+							"host": [
+								"{{base_URL}}{{api}}{{post}}"
+							],
+							"path": [
+								"auth",
+								"likesUp"
+							],
+							"query": [
+								{
+									"key": "postId",
+									"value": "{{postId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create a comment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response to contains automation message\", () => {\r",
+									"    _.each(jsonData.Responses, (item) => {\r",
+									"        pm.expect(item.content.startsWith(pm.collectionVariables.get(\"comment_content\"))).to.be.true;\r",
+									"        })\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response to have commentId section\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"commentId\");\r",
+									"});\r",
+									"\r",
+									"pm.collectionVariables.set(\"comment_id\", jsonData.commentId);\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"commentId\": 0,\r\n  \"content\": {{comment_content}},\r\n  \"deletedConfirmed\": true,\r\n  \"postId\": {{postId}},\r\n  \"userId\": {{user_id}}\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_URL}}{{api}}{{comment}}/auth/creator",
+							"host": [
+								"{{base_URL}}{{api}}{{comment}}"
+							],
+							"path": [
+								"auth",
+								"creator"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all comments by post",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response to contains automation comments\", () => {\r",
+									"    _.each(jsonData.Responses, (item) => {\r",
+									"        pm.expect(item.content.startsWith(pm.collectionVariables.get(\"comment_content\"))).to.be.true;\r",
+									"        })\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true,
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_URL}}{{api}}{{comment}}/byPost?postId={{postId}}",
+							"host": [
+								"{{base_URL}}{{api}}{{comment}}"
+							],
+							"path": [
+								"byPost"
+							],
+							"query": [
+								{
+									"key": "postId",
+									"value": "{{postId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Like a comment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Validate comment is liked.\", function () {\r",
+									"    pm.expect(JSON.stringify(jsonData.liked)).to.eql(\"true\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate user liked the comment.\", function () {\r",
+									"    pm.expect(jsonData.likes[0].username).eqls(pm.collectionVariables.get(\"username\"));\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_URL}}{{api}}{{comment}}/auth/likesUp?commentId={{comment_id}}",
+							"host": [
+								"{{base_URL}}{{api}}{{comment}}"
+							],
+							"path": [
+								"auth",
+								"likesUp"
+							],
+							"query": [
+								{
+									"key": "commentId",
+									"value": "{{comment_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Dislike a comment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Validate comment is unliked.\", function () {\r",
+									"    pm.expect(JSON.stringify(jsonData.liked)).to.eql(\"false\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_URL}}{{api}}{{comment}}/auth/likesUp?commentId={{comment_id}}",
+							"host": [
+								"{{base_URL}}{{api}}{{comment}}"
+							],
+							"path": [
+								"auth",
+								"likesUp"
+							],
+							"query": [
+								{
+									"key": "commentId",
+									"value": "{{comment_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit a comment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response body is empty\", function () {\r",
+									"    pm.expect(pm.response.text()).to.eql(\"\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true,
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "set-cookie",
+								"value": "",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{base_URL}}/api/comment/auth/editor?commentId={{comment_id}}&content={{edited_comment_content}}",
+							"host": [
+								"{{base_URL}}"
+							],
+							"path": [
+								"api",
+								"comment",
+								"auth",
+								"editor"
+							],
+							"query": [
+								{
+									"key": "commentId",
+									"value": "{{comment_id}}"
+								},
+								{
+									"key": "content",
+									"value": "{{edited_comment_content}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a comment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response body is empty\", function () {\r",
+									"    pm.expect(pm.response.text()).to.eql(\"\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_URL}}{{api}}{{comment}}/auth/manager?commentId={{comment_id}}",
+							"host": [
+								"{{base_URL}}{{api}}{{comment}}"
+							],
+							"path": [
+								"auth",
+								"manager"
+							],
+							"query": [
+								{
+									"key": "commentId",
+									"value": "{{comment_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a post",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response body is empty\", function () {\r",
+									"    pm.expect(pm.response.text()).to.eql(\"\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_URL}}{{api}}{{post}}/auth/manager?postId={{postId}}",
+							"host": [
+								"{{base_URL}}{{api}}{{post}}"
+							],
+							"path": [
+								"auth",
+								"manager"
+							],
+							"query": [
+								{
+									"key": "postId",
+									"value": "{{postId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {",
+							"  pm.response.to.have.status(200);",
+							"});"
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Update User Personal Profile",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									" var jsonData = pm.response.json()\r",
+									"\r",
+									" pm.test(\"Response body contains all properties\", function () {\r",
+									"\r",
+									"    pm.expect(jsonData.firstName).to.be.a('string')\r",
+									"    pm.expect(jsonData.lastName).to.be.a('string')\r",
+									"    pm.expect(jsonData.personalReview).to.be.a('string')\r",
+									"    pm.expect(typeof(jsonData.location))==='array'\r",
+									"    pm.expect(jsonData.birthYear).to.match(/^\\d{4}\\-\\d{2}\\-\\d{2}$/)\r",
+									"   \r",
+									" })\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"birthYear\": \"{{random_birthDate}}\",\r\n  \"firstName\": \"{{$randomFirstName}}\",\r\n  \"id\": {{user_id}}, \r\n  \"lastName\": \"{{$randomLastName}}\",\r\n  \"location\": {\r\n    \"city\": {\r\n      \"city\": \"\",\r\n      \"country\": {},\r\n      \"id\": {{random_city}}\r\n    },\r\n    \"id\": 0\r\n  },\r\n  \"memberSince\": \"\",\r\n  \"personalReview\": \"{{$randomLoremSentence}}\",\r\n  \"picture\": {{picture_content}},\r\n  \"picturePrivacy\": true,\r\n  \"sex\": \"{{sex}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_URL}}/api/users/auth/{{user_id}}/personal",
+							"host": [
+								"{{base_URL}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"auth",
+								"{{user_id}}",
+								"personal"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin registration",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var resp = pm.response.text()\r",
+									"\r",
+									" pm.test(\"Response body contains id\", ()=>{\r",
+									"     pm.expect(resp).to.include(\"id\");\r",
+									" })\r",
+									"\r",
+									"pm.collectionVariables.set(\"admin_user\", resp.split(\" \")[3]);\r",
+									"\r",
+									"console.log(resp.split(\" \")[3]); \r",
+									"console.log(resp.split(\" \")[6]); \r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"authorities\": [\r\n    \"ROLE_ADMIN\"\r\n  ],\r\n  \"category\": {\r\n    \"id\": {{category_id}},\r\n    \"name\": \"{{category_name}}\"\r\n  },\r\n  \"confirmPassword\": \"{{admin_password}}\",\r\n  \"email\": \"{{email_random}}\",\r\n  \"password\": \"{{admin_password}}\",\r\n   \"username\": \"admin{{$randomLastName}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_URL}}{{api}}/users/",
+							"host": [
+								"{{base_URL}}{{api}}"
+							],
+							"path": [
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if ([200].includes(pm.response.code)){\r",
+									"var jsonData = pm.response.json();\r",
+									"var resp = pm.response.text();\r",
+									"\r",
+									"pm.collectionVariables.set(\"expertiseProfile_id\", jsonData[0].expertiseProfile.id);\r",
+									"\r",
+									"pm.test(\"Response body contains necessary fields\", function () {\r",
+									"    pm.expect(resp).to.include(\"userId\");\r",
+									"    pm.expect(resp).to.include(\"username\");\r",
+									"    pm.expect(resp).to.include(\"expertiseProfile\");\r",
+									"    pm.expect(resp).to.include(\"skills\");\r",
+									"    pm.expect(resp).to.include(\"category\");\r",
+									"    pm.expect(resp).to.include(\"availability\");\r",
+									"    pm.expect(resp).to.include(\"accountNonExpired\");\r",
+									"});\r",
+									"} else {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    console.log(\"Response status\", jsonData.status);\r",
+									"    console.log(\"Response error\", jsonData.error);    \r",
+									"    console.log(\"Response message\", jsonData.message);\r",
+									"}\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"index\": 0,\r\n  \"next\": true,\r\n  \"searchParam1\": \"\",\r\n  \"searchParam2\": \"\",\r\n  \"size\": 20\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_URL}}{{api}}{{users}}",
+							"host": [
+								"{{base_URL}}{{api}}{{users}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Connections - Happy Paths",
+			"item": [
+				{
+					"name": "User One registration",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var resp = pm.response.text()\r",
+									"\r",
+									" pm.test(\"Response body contains username and id\", ()=>{\r",
+									"     pm.expect(resp).to.include(\"name\");\r",
+									"     pm.expect(resp).to.include(\"id\");\r",
+									" })\r",
+									"\r",
+									"pm.collectionVariables.set(\"usernameOne\", resp.split(\" \")[3]);\r",
+									"pm.collectionVariables.set(\"userOne_id\", resp.split(\" \")[6]);\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"authorities\": [\r\n    \"ROLE_USER\"\r\n  ],\r\n  \"category\": {\r\n    \"id\": {{category_id}},\r\n    \"name\": \"{{category_name}}\"\r\n  },\r\n  \"confirmPassword\": \"{{password}}\",\r\n  \"email\": \"{{email_random}}\",\r\n  \"password\": \"{{password}}\",\r\n  \"username\": \"{{$randomFirstName}}{{randomString}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_URL}}{{api}}/users/",
+							"host": [
+								"{{base_URL}}{{api}}"
+							],
+							"path": [
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User Two registration",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var resp = pm.response.text()\r",
+									"\r",
+									"pm.test(\"Response body contains username and id\", ()=>{\r",
+									"     pm.expect(resp).to.include(\"name\");\r",
+									"     pm.expect(resp).to.include(\"id\");\r",
+									" })\r",
+									"\r",
+									"pm.collectionVariables.set(\"usernameTwo\", resp.split(\" \")[3]);\r",
+									"pm.collectionVariables.set(\"userTwo_id\", resp.split(\" \")[6]);\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"authorities\": [\r\n    \"ROLE_USER\"\r\n  ],\r\n  \"category\": {\r\n    \"id\": {{category_id}},\r\n    \"name\": \"{{category_name}}\"\r\n  },\r\n  \"confirmPassword\": \"{{password}}\",\r\n  \"email\": \"{{email_random}}\",\r\n  \"password\": \"{{password}}\",\r\n  \"username\": \"{{$randomLastName}}{{randomString}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_URL}}{{api}}/users/",
+							"host": [
+								"{{base_URL}}{{api}}"
+							],
+							"path": [
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Send connect request",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const html = cheerio(responseBody);\r",
+									"pm.test(\"Response has succefull message for sending connection- Good job! You have send friend request\", function () {\r",
+									"   pm.expect(pm.response.text()).to.include(\"Good job! You have send friend request!\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "{{usernameOne}}",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "{{password}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_URL}}/auth/connection/request?id={{userTwo_id}}&username={{usernameTwo}}",
+							"host": [
+								"{{base_URL}}"
+							],
+							"path": [
+								"auth",
+								"connection",
+								"request"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "{{userTwo_id}}"
+								},
+								{
+									"key": "username",
+									"value": "{{usernameTwo}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get connection requests",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"pm.collectionVariables.set(\"connectID\", jsonData[0]?.id);\r",
+									"\r",
+									"pm.test(\"Response to have all necessary fields.\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"id\");\r",
+									"    pm.expect(pm.response.text()).to.include(\"timeStamp\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Connection request is not yet approved test\", function () {\r",
+									"    pm.expect(jsonData[0]?.approved).to.equal(false);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var user=pm.collectionVariables.get(\"usernameTwo\");",
+									"var pass=pm.collectionVariables.get(\"password\");",
+									"",
+									"var login = {",
+									"    method: 'POST', ",
+									"    url: 'http://localhost:8081/authenticate', ",
+									"    header: {",
+									"        'Content-Type': 'multipart/form-data', ",
+									"    },",
+									"    body: {",
+									"        mode: 'formdata',",
+									"        formdata: [",
+									"            { key: 'username', value: user },",
+									"            { key: 'password', value: pass },",
+									"            ",
+									"        ]",
+									"    }",
+									"};",
+									"pm.sendRequest(login);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "{{password}}",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "{{usernameTwo}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_URL}}/api/auth/users/{{userTwo_id}}/request/",
+							"host": [
+								"{{base_URL}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"users",
+								"{{userTwo_id}}",
+								"request",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Accept connection request",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Validate response has same content\", function () {\r",
+									"   pm.expect(pm.response.text()).to.include(\"approved request\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "{{password}}",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "{{usernameTwo}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_URL}}/api/auth/users/{{userTwo_id}}/request/approve?name={{usernameTwo}}&requestId={{connectID}}",
+							"host": [
+								"{{base_URL}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"users",
+								"{{userTwo_id}}",
+								"request",
+								"approve"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "{{usernameTwo}}"
+								},
+								{
+									"key": "requestId",
+									"value": "{{connectID}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Unhappy paths",
+			"item": [
+				{
+					"name": "Get deleted comments by post",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var resp = pm.response.text();\r",
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Proper Error Status appears\", function () {\r",
+									"    pm.expect(jsonData.status).eqls(404);\r",
+									"});\r",
+									"pm.test(\"Proper Error appears\", function () {\r",
+									"    pm.expect(jsonData.error).eqls(\"Not Found\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true,
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_URL}}{{api}}{{comment}}/single?commentId={{comment_id}}",
+							"host": [
+								"{{base_URL}}{{api}}{{comment}}"
+							],
+							"path": [
+								"single"
+							],
+							"query": [
+								{
+									"key": "commentId",
+									"value": "{{comment_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User registration - username already exists",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var resp = pm.response.text()\r",
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"\r",
+									"pm.test(\"Proper Error Status appears\", function () {\r",
+									"    pm.expect(jsonData.status).eqls(409);\r",
+									"});\r",
+									"pm.test(\"Proper Error Message appears\", function () {\r",
+									"    pm.expect(jsonData.error).eqls(\"Conflict\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"authorities\": [\r\n    \"ROLE_USER\"\r\n  ],\r\n  \"category\": {\r\n    \"id\": {{category_id}},\r\n    \"name\": \"{{category_name}}\"\r\n  },\r\n  \"confirmPassword\": \"{{password}}\",\r\n  \"email\": \"{{email_random}}\",\r\n  \"password\": \"{{password}}\",\r\n  \"username\": \"{{username}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_URL}}{{api}}/users/",
+							"host": [
+								"{{base_URL}}{{api}}"
+							],
+							"path": [
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User registration - password too short",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var resp = pm.response.text()\r",
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"\r",
+									"pm.test(\"Proper Error Status appears\", function () {\r",
+									"    pm.expect(jsonData.status).eqls(400);\r",
+									"});\r",
+									"pm.test(\"Proper Error Message appears\", function () {\r",
+									"    pm.expect(jsonData.error).eqls(\"Bad Request\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"authorities\": [\r\n    \"ROLE_USER\"\r\n  ],\r\n  \"category\": {\r\n    \"id\": {{category_id}},\r\n    \"name\": \"{{category_name}}\"\r\n  },\r\n  \"confirmPassword\": \"{{random_password_too_short}}\",\r\n  \"email\": \"{{email_random}}\",\r\n   \"password\": \"{{random_password_too_short}}\",\r\n  \"username\": \"{{$randomFirstName}}{{randomString}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_URL}}{{api}}/users/",
+							"host": [
+								"{{base_URL}}{{api}}"
+							],
+							"path": [
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User registration - numeric username",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var resp = pm.response.text()\r",
+									"var jsonData = pm.response.json();\r",
+									"pm.collectionVariables.set(\"username_error\", \"username requires no whitespaces, only character\");\r",
+									"\r",
+									"pm.test(\"Proper Error Status appears\", function () {\r",
+									"    pm.expect(jsonData.status).eqls(400);\r",
+									"});\r",
+									"pm.test(\"Proper Error appears\", function () {\r",
+									"    pm.expect(jsonData.error).eqls(\"Bad Request\");\r",
+									"});\r",
+									"pm.test(\"Proper Error Message appears\", function () {\r",
+									"    pm.expect(resp).contains(pm.collectionVariables.get(\"username_error\"));\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"authorities\": [\r\n    \"ROLE_USER\"\r\n  ],\r\n  \"category\": {\r\n    \"id\": {{category_id}},\r\n    \"name\": \"{{category_name}}\"\r\n  },\r\n  \"confirmPassword\": \"{{password}}\",\r\n  \"email\": \"{{email_random}}\",\r\n  \"password\": \"{{password}}\",\r\n  \"username\": \"{{random_numberic_userrname}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_URL}}{{api}}/users/",
+							"host": [
+								"{{base_URL}}{{api}}"
+							],
+							"path": [
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit a post prerequisite",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"var resp = pm.response.text();\r",
+									"var maxPostId = Math.max(...jsonData.map(item => item.postId));\r",
+									"\r",
+									"pm.environment.set(\"postId\", maxPostId);\r",
+									"\r",
+									"console.log(jsonData);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_URL}}{{api}}{{post}}/",
+							"host": [
+								"{{base_URL}}{{api}}{{post}}"
+							],
+							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit a post - content length too long",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var resp = pm.response.text();\r",
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Proper Error Status appears\", function () {\r",
+									"    pm.expect(jsonData.status).eqls(400);\r",
+									"});\r",
+									"pm.test(\"Proper Error appears\", function () {\r",
+									"    pm.expect(jsonData.error).eqls(\"Bad Request\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Proper Error Message appears\", function () {\r",
+									"    pm.expect(resp).contains(pm.collectionVariables.get(\"content_length_error\"));\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true,
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"content\": \"{{random_content_limit}}\",\r\n  \"picture\": {{picture_content}},\r\n  \"public\": true\r\n}\r\n\r\n"
+						},
+						"url": {
+							"raw": "{{base_URL}}{{api}}{{post}}/auth/editor?postId={{postId}}",
+							"host": [
+								"{{base_URL}}{{api}}{{post}}"
+							],
+							"path": [
+								"auth",
+								"editor"
+							],
+							"query": [
+								{
+									"key": "postId",
+									"value": "{{postId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create a comment - content length too long",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var resp = pm.response.text();\r",
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Proper Error Status appears\", function () {\r",
+									"    pm.expect(jsonData.status).eqls(400);\r",
+									"});\r",
+									"pm.test(\"Proper Error appears\", function () {\r",
+									"    pm.expect(jsonData.error).eqls(\"Bad Request\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Proper Error Message appears\", function () {\r",
+									"    pm.expect(resp).contains(pm.collectionVariables.get(\"content_length_error\"));\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"commentId\": 0,\r\n  \"content\": \"{{random_content_limit}}\",\r\n  \"deletedConfirmed\": true,\r\n  \"postId\": {{postId}},\r\n  \"userId\": {{user_id}}\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_URL}}{{api}}{{comment}}/auth/creator",
+							"host": [
+								"{{base_URL}}{{api}}{{comment}}"
+							],
+							"path": [
+								"auth",
+								"creator"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"",
+							"if ([400, 401, 403, 404, 409].includes(pm.response.code)){",
+							"    pm.test(\"Unsuccessful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([400, 401, 403, 404, 409]);",
+							"});",
+							"} else {",
+							"    console.log(\"Successful requets.\")",
+							"}"
+						]
+					}
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"var moment = require('moment');",
+					"pm.collectionVariables.set(\"CurrentDate\", moment().format());",
+					"",
+					"var moment = require('moment');",
+					"var pastDate = pm.collectionVariables.replaceIn(\"{{$randomDatePast}}\")",
+					"pastDate = moment(pastDate).format((\"YYYY-MM-DD\"));",
+					"",
+					"var moment = require('moment');",
+					"var memberDate = pm.variables.replaceIn(\"{{$randomDatePast}}\")",
+					"memberDate = moment(memberDate).format((\"DD/MM/YYYY\"));",
+					"",
+					"pm.collectionVariables.set(\"random_memberDate\", memberDate)",
+					"pm.collectionVariables.set(\"random_birthDate\", pastDate)",
+					"pm.collectionVariables.set(\"random_city\", _.random(1, 39))",
+					"pm.collectionVariables.set(\"random_number\", _.random(1,10))",
+					"",
+					"function randomString(minValue, maxValue, dataSet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ') {",
+					"    if (!minValue) {",
+					"        minValue = 2;",
+					"        maxValue = 10;",
+					"    }",
+					"",
+					"    if (!maxValue) {",
+					"        maxValue = minValue;",
+					"    }",
+					"",
+					"    let length = _.random(minValue, maxValue),",
+					"        randomString = \"\";",
+					"",
+					"    for (let i = 0; i < length; i++)",
+					"        randomString += dataSet.charAt(Math.floor(Math.random() * dataSet.length));",
+					"    return randomString;",
+					"}",
+					"",
+					"pm.variables.set('randomString', randomString());",
+					"",
+					"",
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "username_random",
+			"value": "\"{{$randomFirstName}}\"",
+			"type": "string"
+		},
+		{
+			"key": "email_random",
+			"value": "{{$randomEmail}}",
+			"type": "string"
+		},
+		{
+			"key": "category_name",
+			"value": "All",
+			"type": "string"
+		},
+		{
+			"key": "category_id",
+			"value": "100",
+			"type": "string"
+		},
+		{
+			"key": "postId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "post_content",
+			"value": "\"Test post Postman {{CurrentDate}} \"",
+			"type": "string"
+		},
+		{
+			"key": "picture_content",
+			"value": "\"no picture {{CurrentDate}}\"",
+			"type": "string"
+		},
+		{
+			"key": "comment_content",
+			"value": "\"Test comment  Postman {{CurrentDate}}\"",
+			"type": "string"
+		},
+		{
+			"key": "edit_post_content",
+			"value": "\"Edited post Postman {{CurrentDate}}\"",
+			"type": "string"
+		},
+		{
+			"key": "edited_comment_content",
+			"value": "\"Edited comment from Postman {{CurrentDate}}\"",
+			"type": "string"
+		},
+		{
+			"key": "admin_user",
+			"value": "testadmin",
+			"type": "string"
+		},
+		{
+			"key": "password",
+			"value": "test123",
+			"type": "string"
+		},
+		{
+			"key": "admin_password",
+			"value": "admin123",
+			"type": "string"
+		},
+		{
+			"key": "login_cookie",
+			"value": "",
+			"type": "string",
+			"disabled": true
+		},
+		{
+			"key": "edited_picture_content",
+			"value": "\"Edited: no picture again {{CurrentDate}}\"",
+			"type": "string"
+		},
+		{
+			"key": "skill_update",
+			"value": "a",
+			"type": "string"
+		},
+		{
+			"key": "random_number",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "random_city",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "random_pastDate",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "random_memberDate",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "sex",
+			"value": "MALE",
+			"type": "string"
+		},
+		{
+			"key": "comment_id",
+			"value": ""
+		},
+		{
+			"key": "skill_text",
+			"value": "\"Skill from postman\"",
+			"disabled": true
+		},
+		{
+			"key": "skill_id",
+			"value": "",
+			"disabled": true
+		},
+		{
+			"key": "random_birthDate",
+			"value": ""
+		},
+		{
+			"key": "user_id",
+			"value": ""
+		},
+		{
+			"key": "expertiseProfile_id",
+			"value": ""
+		},
+		{
+			"key": "CurrentDate",
+			"value": ""
+		},
+		{
+			"key": "usernameOne",
+			"value": ""
+		},
+		{
+			"key": "userOne_id",
+			"value": ""
+		},
+		{
+			"key": "usernameTwo",
+			"value": ""
+		},
+		{
+			"key": "userTwo_id",
+			"value": ""
+		},
+		{
+			"key": "connectID",
+			"value": ""
+		},
+		{
+			"key": "username",
+			"value": ""
+		},
+		{
+			"key": "admin_username",
+			"value": "",
+			"disabled": true
+		},
+		{
+			"key": "admin_id",
+			"value": "",
+			"disabled": true
+		},
+		{
+			"key": "random_string_name_edge_case",
+			"value": "Mk9h5Su6dHlYz6NqUC9DOtwtUPxhr0uuCP123kY5aHnwJvROFtZAeanqDbhEs2mjv2lx9YSUBiudpAZzVlNAMMKMSE8o7ZTgXYwOwt6skPQgMPK4CL53UuCs4ojNd0LRAcASsvCBptsQIFPlr7X1STa1DzHL61ZMQjx6vurQAxCdUiw6q66WiDQOAqiKRScCv4FJ7EYXv7tGvYEGZD34bUggwMyqEq4sFtrXzgVogO550biV8RAPtugzxvz4gkVZAQ8LD8ADC1vVHUIESF4NgGK4XtTGYw6uF4OOiEp7vbFyt5iNVyQhmFNUJFGSIZ6tvn1aruW4GKZ12QIJOVbI6JkQgrDqCMyYsJJC5msYRhrRErQqO8bibDonlxXwmrlgmDgMQG8xeRztT52ATpwSDDrXBDBCGqmdodpH7jlpMxAKB45SyfQuvEXbS7iYdTWripzDuk1QIZgwenIby6FqgDAroRzXniTf8P6oYePj9Ap08jWrxBTITMt2DhV0YUHXPgRjcU3YI3dozJDGuMRddzOUZSfIYzPF1QPiRPbEumrgveEXcjVCsLNzxLzjfKOB8zi3Ori6QeB5xcWcXD0xSqCE38SjtSPHNBncPGm3k1QKjfgIJbdRQ5OwFtvhjBdRVc1zQIq9YjfqI1ydy5JY4WtLEbglgMrNCH0IRNp1tkvrGdke7SY13a3QingcCd70na9qI3JIm2rYs2hny3uBzYLOtLbI45eObxT681wn8QKk5GmDz1mcYgcaxLp4SGPlhYSnk8UtBvzBR4V1qXTs034arFzwdJlk1Vr6vPj8kf2yaXY3DexTG4jmhdPyucFUDcCCmFciedgx2SDlHcMqnVIXuLtqc9KdRoTpdmgJiWWU8vxzfQsxi2f5M1wTqJePaGcj8L6cJWX9RMIFbJtixUrsgOfGdf3CvzJQsR4EN4gGEPQ6LBTg82kVZDSj6VeSMcApIU4iKa1WajH0OztohvED1kEiQMdjRjkeEE19b"
+		},
+		{
+			"key": "random_numberic_userrname",
+			"value": "12345"
+		},
+		{
+			"key": "random_content_limit",
+			"value": "Mk9h5Su6dHlYz6NqUC9DOtwtUPxhr0uuCP123kY5aHnwJvROFtZAeanqDbhEs2mjv2lx9YSUBiudpAZzVlNAMMKMSE8o7ZTgXYwOwt6skPQgMPK4CL53UuCs4ojNd0LRAcASsvCBptsQIFPlr7X1STa1DzHL61ZMQjx6vurQAxCdUiw6q66WiDQOAqiKRScCv4FJ7EYXv7tGvYEGZD34bUggwMyqEq4sFtrXzgVogO550biV8RAPtugzxvz4gkVZAQ8LD8ADC1vVHUIESF4NgGK4XtTGYw6uF4OOiEp7vbFyt5iNVyQhmFNUJFGSIZ6tvn1aruW4GKZ12QIJOVbI6JkQgrDqCMyYsJJC5msYRhrRErQqO8bibDonlxXwmrlgmDgMQG8xeRztT52ATpwSDDrXBDBCGqmdodpH7jlpMxAKB45SyfQuvEXbS7iYdTWripzDuk1QIZgwenIby6FqgDAroRzXniTf8P6oYePj9Ap08jWrxBTITMt2DhV0YUHXPgRjcU3YI3dozJDGuMRddzOUZSfIYzPF1QPiRPbEumrgveEXcjVCsLNzxLzjfKOB8zi3Ori6QeB5xcWcXD0xSqCE38SjtSPHNBncPGm3k1QKjfgIJbdRQ5OwFtvhjBdRVc1zQIq9YjfqI1ydy5JY4WtLEbglgMrNCH0IRNp1tkvrGdke7SY13a3QingcCd70na9qI3JIm2rYs2hny3uBzYLOtLbI45eObxT681wn8QKk5GmDz1mcYgcaxLp4SGPlhYSnk8UtBvzBR4V1qXTs034arFzwdJlk1Vr6vPj8kf2yaXY3DexTG4jmhdPyucFUDcCCmFciedgx2SDlHcMqnVIXuLtqc9KdRoTpdmgJiWWU8vxzfQsxi2f5M1wTqJePaGcj8L6cJWX9RMIFbJtixUrsgOfGdf3CvzJQsR4EN4gGEPQ6LBTg82kVZDSj6VeSMcApIU4iKa1WajH0OztohvED1kEiQMdjRjkeEE19b"
+		},
+		{
+			"key": "pass-error_msg",
+			"value": "",
+			"disabled": true
+		},
+		{
+			"key": "username_duplicate_error",
+			"value": "",
+			"disabled": true
+		},
+		{
+			"key": "username_error",
+			"value": "username requires no whitespaces, only character"
+		},
+		{
+			"key": "unauthorized_error",
+			"value": "",
+			"disabled": true
+		},
+		{
+			"key": "content_length_error",
+			"value": "Content size must be up to 1000 symbols"
+		},
+		{
+			"key": "random_password_too_short",
+			"value": "a"
+		},
+		{
+			"key": "randomContentEdgeLimit",
+			"value": "",
+			"disabled": true
+		},
+		{
+			"key": "randomPassTooShort",
+			"value": "",
+			"disabled": true
+		},
+		{
+			"key": "randomIntNameEdgeCase",
+			"value": "",
+			"disabled": true
+		},
+		{
+			"key": "randomIntNameEdgeCase",
+			"value": "2754478843157151"
+		},
+		{
+			"key": "randomContentEdgeLimit",
+			"value": ""
+		},
+		{
+			"key": "randomPassTooShort",
+			"value": ""
+		}
+	]
+}

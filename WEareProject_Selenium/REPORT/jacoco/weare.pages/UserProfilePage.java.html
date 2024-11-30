@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserProfilePage.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">TelerikTestingFramework</a> &gt; <a href="index.source.html" class="el_package">weare.pages</a> &gt; <span class="el_source">UserProfilePage.java</span></div><h1>UserProfilePage.java</h1><pre class="source lang-java linenums">package weare.pages;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+
+import java.util.Date;
+
+public class UserProfilePage extends HomePage{
+
+    public UserProfilePage() {
+<span class="fc" id="L12">        super(&quot;/auth/users/41/profile&quot;);</span>
+<span class="fc" id="L13">    }</span>
+
+    // Locators
+<span class="fc" id="L16">    private final By editProfileLink = By.xpath(&quot;//a[contains(text(),'edit')]&quot;);</span>
+<span class="fc" id="L17">    private final By firstName = By.id(&quot;nameE&quot;);</span>
+<span class="fc" id="L18">    private final By lastName = By.id(&quot;lastnameE&quot;);</span>
+<span class="fc" id="L19">    private final By birthday = By.id(&quot;birthDayE&quot;);</span>
+<span class="fc" id="L20">    private final By gender = By.id(&quot;selectE&quot;);</span>
+<span class="fc" id="L21">    private final By userEmail = By.id(&quot;emailE&quot;);</span>
+<span class="fc" id="L22">    private final By userInfo = By.id(&quot;publicinfoE&quot;);</span>
+<span class="fc" id="L23">    private final By updateMyProfileButton = By.xpath(&quot;//button[contains(text(),'Update My')]&quot;);</span>
+
+
+    // Actions
+    public void clickEditProfile(){
+<span class="fc" id="L28">        driver().findElement(editProfileLink).click();</span>
+<span class="fc" id="L29">    }</span>
+
+    public void editProfile(String fName, String lName, String date, String email, String aboutMe) {
+<span class="fc" id="L32">        driverWait().until(ExpectedConditions.visibilityOfElementLocated(firstName)).clear();</span>
+<span class="fc" id="L33">        driverWait().until(ExpectedConditions.visibilityOfElementLocated(firstName)).sendKeys(fName);</span>
+<span class="fc" id="L34">        driverWait().until(ExpectedConditions.visibilityOfElementLocated(lastName)).clear();</span>
+<span class="fc" id="L35">        driverWait().until(ExpectedConditions.visibilityOfElementLocated(lastName)).sendKeys(lName);</span>
+<span class="fc" id="L36">        driverWait().until(ExpectedConditions.visibilityOfElementLocated(birthday)).sendKeys(date);</span>
+<span class="fc" id="L37">        driverWait().until(ExpectedConditions.visibilityOfElementLocated(userEmail)).clear();</span>
+<span class="fc" id="L38">        driverWait().until(ExpectedConditions.visibilityOfElementLocated(userEmail)).sendKeys(email);</span>
+<span class="fc" id="L39">        driverWait().until(ExpectedConditions.visibilityOfElementLocated(userInfo)).clear();</span>
+<span class="fc" id="L40">        driverWait().until(ExpectedConditions.visibilityOfElementLocated(userInfo)).sendKeys(aboutMe);</span>
+<span class="fc" id="L41">        driver().findElement(updateMyProfileButton).click();</span>
+<span class="fc" id="L42">    }</span>
+
+    public String getUserInfo() {
+<span class="nc" id="L45">        WebElement userInfoElement = driver().findElement(userInfo);</span>
+<span class="nc" id="L46">        return userInfoElement.getText();</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

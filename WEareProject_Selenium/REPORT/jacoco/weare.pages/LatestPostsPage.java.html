@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LatestPostsPage.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">TelerikTestingFramework</a> &gt; <a href="index.source.html" class="el_package">weare.pages</a> &gt; <span class="el_source">LatestPostsPage.java</span></div><h1>LatestPostsPage.java</h1><pre class="source lang-java linenums">package weare.pages;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+
+public class LatestPostsPage extends HomePage {
+
+    public LatestPostsPage() {
+<span class="fc" id="L10">        super(&quot;/posts&quot;);</span>
+<span class="fc" id="L11">    }</span>
+
+    //Locators
+<span class="fc" id="L14">    private final By seeUserProfileButton = By.xpath(&quot;//body//section[@class='ftco-section ftco-candidates ftco-candidates-2 bg-light']&quot; +</span>
+            &quot;//div[@class='row']//div[@class='row']//div[1]//div[1]//div[2]//p[3]//a[2]&quot;);
+    //Posts locators
+<span class="fc" id="L17">    private final By publicPostsBrowseButton = By.xpath(&quot;//div[@class='col-lg-4 sidebar']//div[1]//form[1]//input[1]&quot;);</span>
+<span class="fc" id="L18">    private final By postVisibilityField = By.xpath(&quot;//select[@id='StringListId' and @name='public']&quot;);</span>
+<span class="fc" id="L19">    private final By publicVisibilityField = By.xpath(&quot;//option[@value='true' and text()='Public post']&quot;);</span>
+<span class="fc" id="L20">    private final By postTextArea = By.xpath(&quot;//textarea[@id='message']&quot;);</span>
+<span class="fc" id="L21">    private final By savePostButton = By.xpath(&quot;//input[@value='Save post']&quot;);</span>
+<span class="fc" id="L22">    private final By newPostButton = By.xpath(&quot;//a[normalize-space()='New post']&quot;);</span>
+<span class="fc" id="L23">    private static final By lastPostLikeButton = By.xpath(&quot;(//input[contains(@id, 'submit-val') and contains(@value, '')])[1]&quot;);</span>
+<span class="fc" id="L24">    public static final By exploreLastPostButton = By.xpath(&quot;//body//section[@class='&quot; +</span>
+            &quot;ftco-section ftco-candidates ftco-candidates-2 bg-light']//div[@class='row']//div[@class='row']&quot; +
+            &quot;//div[1]//div[1]//div[2]//p[3]//a[1]&quot;);
+<span class="fc" id="L27">    private final By editPostButton = By.xpath(&quot;//a[normalize-space()='Edit post']&quot;);</span>
+<span class="fc" id="L28">    private final By deletePostButtonNavigation = By.xpath(&quot;//a[normalize-space()='Delete post']&quot;);</span>
+<span class="fc" id="L29">    private final By deletePostField = By.xpath(&quot;//select[@id='StringListId']&quot;);</span>
+<span class="fc" id="L30">    private final By deletePostFieldOption = By.xpath(&quot;//option[@value='true' and text()='Delete post']&quot;);</span>
+<span class="fc" id="L31">    private final By deletePostButton = By.xpath(&quot;//input[@value='Submit']&quot;);</span>
+<span class="fc" id="L32">    private final By deleteSuccessMessage = By.xpath(&quot;//h1[@class='mb-3 bread']&quot;);</span>
+    //Comments locators
+<span class="fc" id="L34">    private final By commentField = By.id(&quot;message&quot;);</span>
+<span class="fc" id="L35">    private final By postCommentButton = By.xpath(&quot;//input[@value='Post Comment']&quot;);</span>
+<span class="fc" id="L36">    private final By showComments = By.className(&quot;show-comments&quot;);</span>
+<span class="fc" id="L37">    private final By likeLastCommentButton = By.xpath(&quot;//input[contains(@id, 'submit-val') and contains(@value, '')]&quot;);</span>
+<span class="fc" id="L38">    private final By editCommentButton = By.xpath(&quot;//a[normalize-space()='Edit comment']&quot;);</span>
+<span class="fc" id="L39">    private final By postEditCommentButton = By.xpath(&quot;//input[@value='Edit Comment']&quot;);</span>
+<span class="fc" id="L40">    private final By deleteCommentButton = By.xpath(&quot;//a[normalize-space()='Delete comment']&quot;);</span>
+<span class="fc" id="L41">    private final By deleteCommentField = By.xpath(&quot;//select[@id='StringListId']&quot;);</span>
+<span class="fc" id="L42">    private final By deleteCommentOption = By.xpath(&quot;//option[@value='true' and text()='Delete comment']&quot;);</span>
+<span class="fc" id="L43">    private final By deleteButtonSubmitButton = By.xpath(&quot;//input[@value='Submit']&quot;);</span>
+<span class="fc" id="L44">    private final By deleteCommentSuccessMessage = By.xpath(&quot;//h1[@class='mb-3 bread']&quot;);</span>
+<span class="fc" id="L45">    public static String comment = &quot;This is a new comment&quot;;</span>
+<span class="fc" id="L46">    public static String editedComment = &quot;This is edited comment&quot;;</span>
+<span class="fc" id="L47">    public static String publicPost = &quot;This is a public post&quot;;</span>
+<span class="fc" id="L48">    public static String updatedPost = &quot;This is a updated post&quot;;</span>
+    //optional;
+<span class="fc" id="L50">    private final By registerButton = By.xpath(&quot;//a[normalize-space()='REGISTER']&quot;);</span>
+
+    //Actions
+    //Users
+    public void clickSeeProfileButton() {
+<span class="fc" id="L55">        driverWait().until(ExpectedConditions.visibilityOfElementLocated(seeUserProfileButton)).click();</span>
+<span class="fc" id="L56">    }</span>
+
+    //Posts
+    public void clickNewPublicPostButton() {
+<span class="fc" id="L60">        driverWait().until(ExpectedConditions.visibilityOfElementLocated(newPostButton)).click();</span>
+<span class="fc" id="L61">    }</span>
+
+    public void createNewPublicPost() {
+<span class="fc" id="L64">        driverWait().until(ExpectedConditions.visibilityOfElementLocated(postVisibilityField)).click();</span>
+<span class="fc" id="L65">        driverWait().until(ExpectedConditions.visibilityOfElementLocated(publicVisibilityField)).click();</span>
+<span class="fc" id="L66">        driverWait().until(ExpectedConditions.visibilityOfElementLocated(postTextArea)).sendKeys(publicPost);</span>
+<span class="fc" id="L67">        driverWait().until(ExpectedConditions.visibilityOfElementLocated(savePostButton)).click();</span>
+<span class="fc" id="L68">    }</span>
+
+    public void updatePublicPost() {
+<span class="fc" id="L71">        driverWait().until(ExpectedConditions.visibilityOfElementLocated(postVisibilityField)).click();</span>
+<span class="fc" id="L72">        driverWait().until(ExpectedConditions.visibilityOfElementLocated(publicVisibilityField)).click();</span>
+<span class="fc" id="L73">        driverWait().until(ExpectedConditions.visibilityOfElementLocated(postTextArea)).sendKeys(updatedPost);</span>
+<span class="fc" id="L74">        driverWait().until(ExpectedConditions.visibilityOfElementLocated(savePostButton)).click();</span>
+<span class="fc" id="L75">    }</span>
+
+    public void clickPublicPostsButton() {
+<span class="fc" id="L78">        driverWait().until(ExpectedConditions.visibilityOfElementLocated(publicPostsBrowseButton)).click();</span>
+<span class="fc" id="L79">    }</span>
+
+    public void clickEditPostButton() {
+<span class="fc" id="L82">        driverWait().until(ExpectedConditions.visibilityOfElementLocated(editPostButton)).click();</span>
+<span class="fc" id="L83">    }</span>
+
+    public void clickExploreLastPostButton() {
+<span class="fc" id="L86">        driverWait().until(ExpectedConditions.visibilityOfElementLocated(exploreLastPostButton)).click();</span>
+<span class="fc" id="L87">    }</span>
+
+    public void clickOnPostLikeButton() {
+<span class="fc" id="L90">        driver().scrollToElement(lastPostLikeButton);</span>
+<span class="fc" id="L91">        driverWait().until(ExpectedConditions.visibilityOfElementLocated(lastPostLikeButton)).click();</span>
+<span class="fc" id="L92">    }</span>
+
+    public void deletePost() {
+<span class="fc" id="L95">        driverWait().until(ExpectedConditions.visibilityOfElementLocated(deletePostButtonNavigation)).click();</span>
+<span class="fc" id="L96">        driverWait().until(ExpectedConditions.visibilityOfElementLocated(deletePostField)).click();</span>
+<span class="fc" id="L97">        driverWait().until(ExpectedConditions.visibilityOfElementLocated(deletePostFieldOption)).click();</span>
+<span class="fc" id="L98">        driverWait().until(ExpectedConditions.visibilityOfElementLocated(deletePostButton)).click();</span>
+<span class="fc" id="L99">    }</span>
+
+    public By getDeletePostSuccessMessage() {
+<span class="fc" id="L102">        return deleteSuccessMessage;</span>
+    }
+
+    public By getDeleteCommentSuccessMessage() {
+<span class="fc" id="L106">        return deleteCommentSuccessMessage;</span>
+    }
+
+    //Comments
+    public void writeComment() {
+<span class="fc" id="L111">        driverWait().until(ExpectedConditions.visibilityOfElementLocated(commentField)).sendKeys(comment);</span>
+<span class="fc" id="L112">        driverWait().until(ExpectedConditions.visibilityOfElementLocated(postCommentButton)).click();</span>
+<span class="fc" id="L113">    }</span>
+
+    public void clickShowCommentsButton() {
+<span class="fc" id="L116">        driver().scrollToElement(showComments);</span>
+<span class="fc" id="L117">        driverWait().until(ExpectedConditions.visibilityOfElementLocated(showComments)).click();</span>
+<span class="fc" id="L118">    }</span>
+
+    public void clickOnCommentsLikeButton() {
+<span class="fc" id="L121">        driver().scrollToElement(likeLastCommentButton);</span>
+<span class="fc" id="L122">        driverWait().until(ExpectedConditions.visibilityOfElementLocated(likeLastCommentButton)).click();</span>
+<span class="fc" id="L123">    }</span>
+
+    public void editComment() {
+<span class="fc" id="L126">        driver().scrollToElement(editCommentButton);</span>
+<span class="fc" id="L127">        driverWait().until(ExpectedConditions.visibilityOfElementLocated(editCommentButton)).click();</span>
+<span class="fc" id="L128">        driverWait().until(ExpectedConditions.visibilityOfElementLocated(commentField)).sendKeys(editedComment);</span>
+<span class="fc" id="L129">    }</span>
+
+    public void clickOnEditedCommentButton() {
+<span class="fc" id="L132">        driverWait().until(ExpectedConditions.visibilityOfElementLocated(postEditCommentButton)).click();</span>
+
+<span class="fc" id="L134">    }</span>
+
+    public void deleteComment() {
+<span class="fc" id="L137">        driver().scrollToElement(deleteCommentButton);</span>
+<span class="fc" id="L138">        driverWait().until(ExpectedConditions.visibilityOfElementLocated(deleteCommentButton)).click();</span>
+<span class="fc" id="L139">        driverWait().until(ExpectedConditions.visibilityOfElementLocated(deleteCommentField)).click();</span>
+<span class="fc" id="L140">        driverWait().until(ExpectedConditions.visibilityOfElementLocated(deleteCommentOption)).click();</span>
+<span class="fc" id="L141">        driverWait().until(ExpectedConditions.visibilityOfElementLocated(deleteButtonSubmitButton)).click();</span>
+
+<span class="fc" id="L143">    }</span>
+
+    public static String getUpdatedPost() {
+<span class="fc" id="L146">        return updatedPost;</span>
+    }
+
+    public static String getComment() {
+<span class="fc" id="L150">        return comment;</span>
+    }
+
+    public static String getEditedComment() {
+<span class="fc" id="L154">        return editedComment;</span>
+    }
+
+    public String getLikeButtonValue() {
+<span class="fc" id="L158">        WebElement lastLikeButton = driverWait().until(ExpectedConditions.visibilityOfElementLocated(lastPostLikeButton));</span>
+<span class="fc" id="L159">        driver().scrollToElement(lastPostLikeButton);</span>
+<span class="fc" id="L160">        driverWait().until(ExpectedConditions.visibilityOfElementLocated(lastPostLikeButton));</span>
+<span class="fc" id="L161">        String buttonValue = lastLikeButton.getAttribute(&quot;value&quot;);</span>
+
+<span class="fc" id="L163">        return getButtonValue(buttonValue);</span>
+    }
+
+    public String getCommentLikeButtonValue() {
+<span class="fc" id="L167">        WebElement lastLikeButton = driverWait().until(ExpectedConditions.visibilityOfElementLocated(likeLastCommentButton));</span>
+<span class="fc" id="L168">        driver().scrollToElement(likeLastCommentButton);</span>
+<span class="fc" id="L169">        String buttonValue = lastLikeButton.getAttribute(&quot;value&quot;);</span>
+
+<span class="fc" id="L171">        return getButtonValue(buttonValue);</span>
+    }
+
+    private String getButtonValue(String buttonValue) {
+<span class="fc" id="L175">        String buttonState = null;</span>
+<span class="fc bfc" id="L176" title="All 2 branches covered.">        if (&quot;Dislike&quot;.equals(buttonValue)) {</span>
+<span class="fc" id="L177">            buttonState = &quot;Dislike&quot;;</span>
+<span class="pc bpc" id="L178" title="1 of 2 branches missed.">        } else if (&quot;Like&quot;.equals(buttonValue)) {</span>
+<span class="fc" id="L179">            buttonState = &quot;Like&quot;;</span>
+        }
+<span class="fc" id="L181">        return buttonState;</span>
+    }
+
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

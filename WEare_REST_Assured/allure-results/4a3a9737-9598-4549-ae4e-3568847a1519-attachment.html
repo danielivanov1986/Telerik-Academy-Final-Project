@@ -1,0 +1,61 @@
+<div>POST to http://localhost:8081/api/users/auth/390/personal?name=GYsekChF</div>
+
+    <h4>Body</h4>
+    <div>
+    <pre class="preformated-text">
+{
+    &quot;id&quot;: 390,
+    &quot;username&quot;: &quot;GYsekChF&quot;,
+    &quot;email&quot;: &quot;lAcce@test.com&quot;,
+    &quot;firstName&quot;: &quot;GYsekChF&quot;,
+    &quot;lastName&quot;: &quot;randomLastName&quot;,
+    &quot;sex&quot;: &quot;MALE&quot;,
+    &quot;birthYear&quot;: &quot;2024-11-11&quot;,
+    &quot;personalReview&quot;: &quot;randomPhrase&quot;,
+    &quot;location&quot;: {
+        &quot;city&quot;: {
+            &quot;id&quot;: 1,
+            &quot;city&quot;: &quot;Sofia&quot;,
+            &quot;country&quot;: {
+                
+            }
+        }
+    }
+}    </pre>
+    </div>
+
+    <h4>Headers</h4>
+    <div>
+            <div>Accept: */*</div>
+            <div>Content-Type: application/json</div>
+    </div>
+
+
+    <h4>Cookies</h4>
+    <div>
+            <div>JSESSIONID: CAF60E98680A24380CACE7CF9845AA23</div>
+    </div>
+
+    <h4>Curl</h4>
+    <div>
+        curl -v -X POST &#39;http://localhost:8081/api/users/auth/390/personal?name=GYsekChF&#39; -H &#39;Accept: */*&#39; -H &#39;Content-Type: application/json&#39; -b &#39;JSESSIONID=CAF60E98680A24380CACE7CF9845AA23&#39; -d &#39;{
+    &quot;id&quot;: 390,
+    &quot;username&quot;: &quot;GYsekChF&quot;,
+    &quot;email&quot;: &quot;lAcce@test.com&quot;,
+    &quot;firstName&quot;: &quot;GYsekChF&quot;,
+    &quot;lastName&quot;: &quot;randomLastName&quot;,
+    &quot;sex&quot;: &quot;MALE&quot;,
+    &quot;birthYear&quot;: &quot;2024-11-11&quot;,
+    &quot;personalReview&quot;: &quot;randomPhrase&quot;,
+    &quot;location&quot;: {
+        &quot;city&quot;: {
+            &quot;id&quot;: 1,
+            &quot;city&quot;: &quot;Sofia&quot;,
+            &quot;country&quot;: {
+                
+            }
+        }
+    }
+}&#39;
+    </div>
+
